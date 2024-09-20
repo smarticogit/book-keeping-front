@@ -21,9 +21,9 @@ export function DropdownMenuUser() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">User</p>
+            <p className="text-sm font-medium leading-none">Username </p>
             <p className="text-xs leading-none text-muted-foreground">
-              user@mimoogratis.com.br
+              user@email.com
             </p>
           </div>
         </DropdownMenuLabel>
@@ -34,7 +34,7 @@ export function DropdownMenuUser() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>Sair</DropdownMenuItem>
+        <DropdownMenuItem>Exit</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
