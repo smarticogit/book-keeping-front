@@ -1,8 +1,11 @@
+import { BrowserRouter } from "react-router-dom";
+import { Router } from "./Router";
+
 function App() {
   return (
-    <>
-      <h1>Book Keeping Plataform</h1>
-    </>
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
   );
 }
 
