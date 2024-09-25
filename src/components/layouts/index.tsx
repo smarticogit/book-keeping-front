@@ -5,15 +5,18 @@ import { ScrollArea } from "../ui/scroll-area";
 
 export function Layout() {
   return (
-    <div className="h-screen flex flex-row overflow-hidden">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
+    <div className=" relative">
+      <div className="w-60 absolute top-5 left-5">
+        <Sidebar />
+      </div>
+
+      <div className="w-20 h-40 bg-slate-200 absolute top-5 right-10 rounded-xl">
         <Navbar />
-        <ScrollArea
-          className="bg-slate-100"
-          style={{ height: "calc(100vh - 60px)" }} // 60px is the height of the navbar
-        >
-          <div className="px-4 py-6 lg:px-8 ">
+      </div>
+
+      <div className="flex justify-center w-[70vw] h-[80vh] absolute top-5 left-72 rounded-xl bg-slate-200">
+        <ScrollArea className="flex justify-center items-center w-full overflow-auto">
+          <div className="w-full  absolute top-5">
             <Outlet />
           </div>
         </ScrollArea>

@@ -4,9 +4,9 @@ import avatarImage from "@/assets/avatar.svg";
 
 export function Navbar() {
   return (
-    <div className="bg-white py-2 h-[60px]">
-      <div className="flex items-center px-4">
-        <div className="ml-auto flex items-center space-x-4">
+    <div className=" p-2 h-10 rounded-xl bg-slate-200">
+      <div className="flex items-center justify-center">
+        <div className="">
           <Avatar className="h-10 w-10">
             <AvatarImage
               className="object-cover"

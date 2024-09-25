@@ -3,13 +3,13 @@ import { sidebarItems } from "./sidebar-items";
 
 export function Sidebar() {
   return (
-    <div className="pb-12 hidden w-64 lg:block">
-      <div className=" py-10">
-        <div className="text-cyan-800 text-xl font-montserrat font-extrabold  flex justify-center">
+    <div className="rounded-xl bg-slate-200">
+      <div className="flex flex-col items-center py-8 ">
+        <div className="text-cyan-800 text-xl font-montserrat font-extrabold  ">
           Book Keeping
         </div>
 
-        <div className="py-10 px-4 gap-2 flex flex-col">
+        <div className="py-4 gap-2 flex flex-col">
           {sidebarItems.map((item, i) => (
             <NavLink key={`${item}-${i}`} to={item.href}>
               {({ isActive }) =>

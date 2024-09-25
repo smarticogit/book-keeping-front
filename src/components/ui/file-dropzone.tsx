@@ -71,7 +71,7 @@ export function FileDropzone({
   return (
     <div
       {...getRootProps()}
-      className="w-full gap-3 flex flex-col items-center"
+      className="w-full gap-3 flex flex-col items-center bg-slate-300 rounded-xl p-5"
     >
       <Input {...getInputProps()} type="file" />
       <div
@@ -80,9 +80,7 @@ export function FileDropzone({
           isErrored && "border-red-500"
         )}
       >
-        <div className="w-[90%] mt-10">
-          <h2 className="text-xl text-left top-10 left-12">Nota fiscal</h2>
-        </div>
+        <h2 className="text-xl top-10 left-12">Statement</h2>
 
         {preview && (
           <div className="w-[90%] flex flex-col items-center h-60 ">
