@@ -11,6 +11,7 @@ function App() {
       <BrowserRouter>
         <Router />
         <Toaster
+          position="top-right"
           toastOptions={{
             classNames: {
               error: "bg-red-200 text-red-700",

@@ -4,7 +4,7 @@ import avatarImage from "@/assets/avatar.svg";
 
 export function Navbar() {
   return (
-    <div className=" p-2 h-10 rounded-xl bg-slate-200">
+    <div className="h-10 rounded-xl bg-slate-200">
       <div className="flex items-center justify-center">
         <div className="">
           <Avatar className="h-10 w-10">

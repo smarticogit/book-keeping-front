@@ -1,4 +1,5 @@
-import { useOCRApi } from "@/api/get-ocr-api";
+
+import { useOCRApi } from "@/api/get";
 import {
   ReactElement,
   JSXElementConstructor,
