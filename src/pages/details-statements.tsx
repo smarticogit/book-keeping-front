@@ -1,9 +1,11 @@
-import { useProcessStatement } from "@/hooks/statement/use-process-statement";
+import { useGetStatementByIdQuery } from "@/hooks/statement/use-get-statement-by-id";
 import { Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { AccountActivity } from "./client.types";
+import { Button } from "@/components/ui/button";
 
-export function StatementsDetails() {
+export function DetaislStatements() {
   const navigate = useNavigate();
   const { statementId } = useParams<{ statementId: string }>();
 
@@ -11,19 +13,16 @@ export function StatementsDetails() {
     toast.error("Erro ao obter o ID do extrato");
     return null;
   }
+  const { data, isLoading } = useGetStatementByIdQuery(statementId);
 
-  const { data, isLoading, isError } = useProcessStatement(statementId);
-
-  if (isError) {
-    toast.error("Erro ao processar o extrato");
-    navigate("/statements");
-    return null;
+  function handleEditClient() {
+    navigate(`/statements-edit/${statementId}`);
   }
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold text-slate-600 mb-4">
-        Detalhes do Extrato
+        Statement Details
       </h1>
 
       {isLoading && (
@@ -34,93 +33,97 @@ export function StatementsDetails() {
 
       {data && (
         <div className="space-y-6">
-          {/* Seção de Informações Principais */}
-          <div className="bg-white shadow-md rounded p-6">
-            <h2 className="text-xl font-semibold mb-4">
-              Informações do Cliente
-            </h2>
+          <div className="bg-white shadow-md rounded-md p-6">
+            <section className="flex justify-between">
+              <h2 className="text-xl font-semibold mb-4">Client Information</h2>
+              <Button
+                className="bg-blue-500 text-white px-4 py-2"
+                onClick={handleEditClient}
+              >
+                Edit
+              </Button>
+            </section>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <span className="font-medium">Nome do Banco:</span>{" "}
-                {data.bankName || "N/A"}
+                <span className="font-medium">Bank name:</span>{" "}
+                {data.bankName || "--"}
               </div>
               <div>
-                <span className="font-medium">Nome do Cliente:</span>{" "}
-                {data.customerName || "N/A"}
+                <span className="font-medium">Client name:</span>{" "}
+                {data.client.name || "--"}
               </div>
               <div>
-                <span className="font-medium">Número do Cliente:</span>{" "}
-                {data.customerNumber || "N/A"}
+                <span className="font-medium">Client number:</span>{" "}
+                {data.customerNumber || "--"}
               </div>
               <div>
-                <span className="font-medium">Telefone:</span>{" "}
-                {data.phoneNumber || "N/A"}
+                <span className="font-medium">Account type:</span>{" "}
+                {data.accountType || "--"}
               </div>
               <div>
-                <span className="font-medium">Tipo de Conta:</span>{" "}
-                {data.accountType || "N/A"}
+                <span className="font-medium">Account number:</span>{" "}
+                {data.accountNumber || "--"}
               </div>
               <div>
-                <span className="font-medium">Número da Conta:</span>{" "}
-                {data.accountNumber || "N/A"}
+                <span className="font-medium">Beginning balance:</span>{" "}
+                {data.beginningBalance || "--"}
               </div>
               <div>
-                <span className="font-medium">Saldo Inicial:</span>{" "}
-                {data.beginningBalance || "N/A"}
+                <span className="font-medium">Ending balance:</span>{" "}
+                {data.endingBalance || "--"}
               </div>
               <div>
-                <span className="font-medium">Saldo Final:</span>{" "}
-                {data.endingBalance || "N/A"}
-              </div>
-              <div>
-                <span className="font-medium">Data do Extrato:</span>{" "}
-                {data.statementDate || "N/A"}
+                <span className="font-medium">Statement date:</span>{" "}
+                {data.statementDate
+                  ? new Date(data.statementDate).toLocaleDateString()
+                  : "--"}
               </div>
             </div>
           </div>
 
-          {/* Seção de Atividades */}
-          <div className="bg-white shadow-md rounded p-6">
-            <h2 className="text-xl font-semibold mb-4">Atividades</h2>
-            {data.activities.length > 0 ? (
+          <div className="bg-white shadow-md rounded-md p-6">
+            <h2 className="text-xl font-semibold mb-4">Activities</h2>
+            {data.accountActivity && data.accountActivity.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Data
+                        Date
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Descrição
+                        Description
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Débitos
+                        Debits
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Créditos
+                        Credits
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Saldo
+                        Balance
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {data.activities.map((activity, index) => (
-                      <tr key={index}>
+                    {data.accountActivity.map((activity: AccountActivity) => (
+                      <tr key={activity.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.postDate || "N/A"}
+                          {activity.postDate
+                            ? new Date(activity.postDate).toLocaleDateString()
+                            : "--"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.description || "N/A"}
+                          {activity.description || "--"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.debits || "N/A"}
+                          {activity.debit || "--"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.credits || "N/A"}
+                          {activity.credit || "--"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.balance || "N/A"}
+                          {activity.balance || "--"}
                         </td>
                       </tr>
                     ))}

@@ -20,3 +20,21 @@ export const apiPost = async (route: string, input: any) => {
     throw error;
   }
 };
+
+export const apiPostFormData = async (route: string, input: any) => {
+  try {
+    const response = await axios.post(`${baseUrl}/${route}`, input, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return {
+      response: response.data,
+      isError: false,
+      isSuccess: true,
+    };
+  } catch (error) {
+    toast.error(`Error with GET By Id request: ${error}`);
+    throw error;
+  }
+};

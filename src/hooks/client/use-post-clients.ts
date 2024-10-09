@@ -1,14 +1,9 @@
 import { apiPost } from "@/api/post";
-import { useQuery } from "@tanstack/react-query";
+import { ClientRequest } from "@/pages/client.types";
+import { useMutation } from "@tanstack/react-query";
 
-export function usePostClientsMutation(
-  route: string,
-  data: { name: string; email: string; doc: string }
-) {
-  const query = useQuery({
-    queryKey: ["clients"],
-    queryFn: () => apiPost(route, data),
+export function usePostClientsMutation() {
+  return useMutation({
+    mutationFn: (data: ClientRequest) => apiPost("clients", data),
   });
-
-  return query;
 }

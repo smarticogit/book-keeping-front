@@ -1,21 +1,28 @@
 // types.ts
-export interface Activity {
-  postDate: string;
+export type AccountActivityUpdate = {
+  postDate: Date;
   description: string;
-  debits: string;
-  credits: string;
-  balance: string;
-}
+  debit: number;
+  credit: number;
+  balance: number;
+  beginningBalance: number;
+  endingBalance: number;
+  category?: string;
+};
 
 export interface ExtractedData {
+  id: string;
+  clientId: string;
   bankName: string;
   customerName: string;
   customerNumber: string;
-  phoneNumber: string;
   accountType: string;
   accountNumber: string;
-  beginningBalance: string;
-  endingBalance: string;
-  statementDate: string;
-  activities: Activity[];
+  beginningBalance: number;
+  endingBalance: number;
+  statementDate: Date | null;
+  statementKey: string;
+  accountActivity?: AccountActivityUpdate[];
+  createdAt: Date;
+  updatedAt: Date;
 }

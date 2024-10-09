@@ -11,7 +11,7 @@ export function Layout() {
       </div>
 
       <div className="flex justify-center w-[75%] h-[90vh] rounded-xl bg-slate-200">
-        <ScrollArea className="flex justify-center items-center w-full overflow-auto">
+        <ScrollArea className="flex justify-center items-center w-full overflow-hidden">
           <div className="w-full">
             <Outlet />
           </div>

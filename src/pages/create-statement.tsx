@@ -2,45 +2,37 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetClientByIdQuery } from "@/hooks/client/use-get-client-by-id";
-
-type Statement = {
-  clientId: string;
-  bankName: string;
-  statementFile?: File[];
-};
+import { useCreateStatementsMutation } from "@/hooks/statement/use-create-statement";
+import { StatementCreate } from "./client.types";
+import { Loader2 } from "lucide-react";
 
 export function CreateStatement() {
   const navigate = useNavigate();
   const { clientId } = useParams<{ clientId: string }>();
 
   if (!clientId) {
-    toast.error("Erro ao criar o extrato, cliente não encontrado");
+    toast.error("Client not found");
     navigate("/clients");
-    return null;
+    throw new Error("Client not found");
   }
 
   const client = useGetClientByIdQuery(clientId);
 
-  {
-    client.isLoading && <div>Loading...</div>;
-  }
-  {
-    client.isError && <div>Error loading client data</div>;
-  }
+  const statementCreate = useCreateStatementsMutation();
 
-  const { register, handleSubmit } = useForm<Statement>();
+  const { register, handleSubmit } = useForm<StatementCreate>();
 
-  const onSubmit = async (data: Statement) => {
+  const onSubmit = async (data: StatementCreate) => {
     const file = data.statementFile?.[0];
 
     if (!file) {
-      toast.error("Selecione o arquivo");
+      toast.error("Select a statement file");
       return;
     }
 
     const allowedTypes = ["application/pdf", "image/png", "image/jpeg"];
     if (!allowedTypes.includes(file.type)) {
-      toast.error("Selecione um arquivo do tipo PDF, PNG ou JPG");
+      toast.error("Select a valid statement file");
       return;
     }
 
@@ -48,59 +40,18 @@ export function CreateStatement() {
     formData.append("statementFile", file);
     formData.append("clientId", data.clientId);
     formData.append("bankName", data.bankName);
+    formData.append("customerName", client.data.name);
 
-    try {
-      const response = await fetch("http://localhost:3333/statements", {
-        method: "POST",
-        body: formData,
-      });
-
-      console.log(response);
-
-      if (response.ok) {
-        toast.success("Cliente criado com sucesso!");
-      } else {
-        toast.error("Erro ao enviar o extrato");
-      }
-    } catch (error) {
-      toast.error("Erro na requisição: " + error);
-    }
+    statementCreate.mutate(formData);
   };
 
-  async function handleOCRProcess() {
-    try {
-      const response = await fetch(
-        "http://localhost:3333/statements/1727213827633",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        toast("OCR processado com sucesso!");
-      } else {
-        console.error("Erro ao criar cliente.");
-      }
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-    }
-  }
-
-  const handleGetStatement = () => {
-    toast("redirecionado para o extrato");
-    setTimeout(() => navigate("/ocr"), 2000);
-  };
+  statementCreate.isSuccess && navigate(`/clients-details/${clientId}`);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-[30rem] p-5 gap-5">
-      {client.isLoading && <div>Loading...</div>}
-      {client.isError && <div>Error loading client data</div>}
       {client.data && (
-        <div className="mb-4">
-          <label className="block text-gray-700">Cliente</label>
+        <div className="mb-4 flex items-center">
+          <label className="block text-gray-700">Client: </label>
           <div className="border p-2 rounded">{client.data.name}</div>
         </div>
       )}
@@ -108,20 +59,20 @@ export function CreateStatement() {
       <input type="hidden" value={clientId} {...register("clientId")} />
 
       <div className="mb-4">
-        <label htmlFor="bank">Selecione um banco</label>
+        <label htmlFor="bank">Select Bank</label>
         <select
           id="bank"
           {...register("bankName")}
           className="w-full px-3 py-2 border rounded"
         >
-          <option value="Citybank">Citybank</option>
-          <option value="Bookbank">Bookbank</option>
-          <option value="Nubank">Bookbank</option>
+          <option value="Citybank">Fidelity Bank</option>
+          <option value="Bank of America">Bank of America</option>
+          <option value="Bookeeper Bank">Bookeeper Bank</option>
         </select>
       </div>
 
       <div className="mb-4">
-        <label className="block text-gray-700">Extrato (PDF)</label>
+        <label className="block text-gray-700">Statement (PDF)</label>
 
         <input
           {...register("statementFile")}
@@ -133,25 +84,15 @@ export function CreateStatement() {
 
       <button
         type="submit"
-        className="mb-4 w-full bg-blue-500 text-white py-2 rounded"
+        className="mb-4 w-20 bg-blue-500 text-white py-2 rounded"
       >
-        Send
-      </button>
-
-      <button
-        onClick={() => handleOCRProcess()}
-        type="button"
-        className="mb-4 w-full bg-blue-500 text-white py-2 rounded"
-      >
-        OCR Process
-      </button>
-
-      <button
-        onClick={() => handleGetStatement()}
-        type="button"
-        className="mb-4 w-full bg-blue-500 text-white py-2 rounded"
-      >
-        Get Statement
+        {statementCreate.isPending ? (
+          <div className="flex justify-center items-center p-0">
+            <Loader2 className="animate-spin" />
+          </div>
+        ) : (
+          "Send"
+        )}
       </button>
     </form>
   );
