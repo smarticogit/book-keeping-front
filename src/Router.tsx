@@ -12,6 +12,7 @@ import DetailsClient from "./pages/details-client";
 import UpdateClient from "./pages/update-client";
 import { EditStatement } from "./pages/edit-statement";
 import { DetaislStatements } from "./pages/details-statements";
+import { EditAccountActivities } from "./pages/edit-account-activities";
 
 export function Router() {
   return (
@@ -36,6 +37,10 @@ export function Router() {
         <Route
           path="/statements-create/:clientId"
           element={<CreateStatement />}
+        />
+        <Route
+          path="/account-activities-edit/:statementId"
+          element={<EditAccountActivities />}
         />
         <Route path="/ocr" element={<OCR />} />
       </Route>

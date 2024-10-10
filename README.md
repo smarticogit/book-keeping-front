@@ -1,50 +1,39 @@
-# React + TypeScript + Vite
+# Book Keeping Front
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This frontend project was developed in React with typescript and tailwind CSS. <br>
+The project is still in the development process as the initial idea was to create an MVP.
 
-Currently, two official plugins are available:
+## Procedure for running the project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Clone the code on your computer:
 
-## Expanding the ESLint configuration
+  ```sh
+  git clone  https://github.com/smarticogit/book-keeping-front.git
+  ```
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Access the book-keeping-front folder
 
-- Configure the top-level `parserOptions` property like this:
+  ```sh
+  cd book-keeping-front
+  ```
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Install dependency libraries
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+  ```sh
+  npm install
+  ```
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- Add .env file to project root
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+  ```js
+  NODE_ENV = dev;
+  VITE_API_BASE_URL = "http://localhost:3333";
+  ```
+
+- Run project
+
+  ```sh
+  npm run dev
+  ```
+
+  ### After running the project, check if the backend is running

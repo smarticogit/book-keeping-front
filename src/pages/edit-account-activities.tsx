@@ -1,11 +1,10 @@
 import { useGetStatementByIdQuery } from "@/hooks/statement/use-get-statement-by-id";
-import { Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { AccountActivity } from "./client.types";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
-export function DetaislStatements() {
+export function EditAccountActivities() {
   const navigate = useNavigate();
   const { statementId } = useParams<{ statementId: string }>();
 
@@ -15,18 +14,16 @@ export function DetaislStatements() {
   }
   const { data, isLoading } = useGetStatementByIdQuery(statementId);
 
-  function handleEditClient() {
-    navigate(`/statements-edit/${statementId}`);
-  }
-
-  function handleEditAccountActivities() {
-    navigate(`/account-activities-edit/${statementId}`);
-  }
+  const handleSave = (updatedActivity: AccountActivity) => {
+    // Função para salvar os dados atualizados
+    console.log("Salvando atividade atualizada:", updatedActivity);
+    // Aqui você pode adicionar a lógica de envio dos dados atualizados para o backend
+  };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold text-slate-600 mb-4">
-        Statement Details
+        Edit Account Activities
       </h1>
 
       {isLoading && (
@@ -38,62 +35,8 @@ export function DetaislStatements() {
       {data && (
         <div className="space-y-6">
           <div className="bg-white shadow-md rounded-md p-6">
-            <section className="flex justify-between mb-5">
-              <h2 className="text-xl font-semibold mb-4">Client Information</h2>
-              <Button
-                className="bg-blue-500 text-white h-8"
-                onClick={handleEditClient}
-              >
-                Edit
-              </Button>
-            </section>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <span className="font-medium">Bank name:</span>{" "}
-                {data.bankName || "--"}
-              </div>
-              <div>
-                <span className="font-medium">Client name:</span>{" "}
-                {data.client.name || "--"}
-              </div>
-              <div>
-                <span className="font-medium">Client number:</span>{" "}
-                {data.customerNumber || "--"}
-              </div>
-              <div>
-                <span className="font-medium">Account type:</span>{" "}
-                {data.accountType || "--"}
-              </div>
-              <div>
-                <span className="font-medium">Account number:</span>{" "}
-                {data.accountNumber || "--"}
-              </div>
-              <div>
-                <span className="font-medium">Beginning balance:</span>{" "}
-                {data.beginningBalance || "--"}
-              </div>
-              <div>
-                <span className="font-medium">Ending balance:</span>{" "}
-                {data.endingBalance || "--"}
-              </div>
-              <div>
-                <span className="font-medium">Statement date:</span>{" "}
-                {data.statementDate
-                  ? new Date(data.statementDate).toLocaleDateString()
-                  : "--"}
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white shadow-md rounded-md p-6">
             <section className="flex justify-between items-center mb-5">
               <h2 className="text-xl font-semibold mb-4">Activities</h2>
-              <Button
-                className="bg-blue-500 text-white h-8"
-                onClick={handleEditAccountActivities}
-              >
-                Edit
-              </Button>
             </section>
             {data.accountActivity && data.accountActivity.length > 0 ? (
               <div className="overflow-x-auto">
@@ -115,27 +58,62 @@ export function DetaislStatements() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Balance
                       </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {data.accountActivity.map((activity: AccountActivity) => (
                       <tr key={activity.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.postDate
-                            ? new Date(activity.postDate).toLocaleDateString()
-                            : "--"}
+                          <input
+                            type="date"
+                            className="border rounded px-2 py-1"
+                            defaultValue={
+                              activity.postDate
+                                ? new Date(activity.postDate)
+                                    .toISOString()
+                                    .split("T")[0]
+                                : ""
+                            }
+                          />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.description || "--"}
+                          <input
+                            type="text"
+                            className="border rounded px-2 py-1"
+                            defaultValue={activity.description || ""}
+                          />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.debit || "--"}
+                          <input
+                            type="text"
+                            className="border rounded px-2 py-1"
+                            defaultValue={activity.debit || 0}
+                          />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.credit || "--"}
+                          <input
+                            type="text"
+                            className="border rounded px-2 py-1"
+                            defaultValue={activity.credit || 0}
+                          />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {activity.balance || "--"}
+                          <input
+                            type="text"
+                            className="border rounded px-2 py-1"
+                            defaultValue={activity.balance || 0}
+                          />
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                            onClick={() => handleSave(activity)}
+                          >
+                            Save
+                          </button>
                         </td>
                       </tr>
                     ))}
